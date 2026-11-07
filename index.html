@@ -85,61 +85,91 @@ controls>
 
 <!-- Episode End 62👇63☝️ -->
 
-<!-- ❤️ LIKE REACTION START -->
+<!-- ❤️🔥😡👍 REACTION SECTION START -->
 
-<div class="like-reaction">
-    <button id="likeBtn" onclick="likeVideo()">
-        ❤️ Like <span id="likeCount">0</span>
-    </button>
+<div class="reaction-box">
+    <button onclick="react('❤️')" id="like">❤️ <span id="likeCount">0</span></button>
+    <button onclick="react('🔥')" id="fire">🔥 <span id="fireCount">0</span></button>
+    <button onclick="react('😡')" id="angry">😡 <span id="angryCount">0</span></button>
+    <button onclick="react('👍')" id="thumb">👍 <span id="thumbCount">0</span></button>
 </div>
 
 <style>
-.like-reaction {
-    text-align: center;
-    margin: 20px;
+.reaction-box {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 25px 0;
 }
 
-.like-reaction button {
+.reaction-box button {
     background: #222;
     color: white;
-    border: none;
-    padding: 12px 25px;
+    border: 2px solid #444;
     border-radius: 30px;
-    font-size: 18px;
+    padding: 10px 16px;
+    font-size: 19px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-.like-reaction button:disabled {
-    background: #444;
-    color: #aaa;
-    cursor: not-allowed;
+.reaction-box button.active {
+    background: #075985;
+    border-color: #00d9ff;
+    transform: scale(1.1);
 }
 </style>
 
 <script>
-let likes = Number(localStorage.getItem("videoLikes")) || 0;
-let alreadyLiked = localStorage.getItem("alreadyLiked");
+let reactions = JSON.parse(localStorage.getItem("reactions")) || {
+    "❤️": 0,
+    "🔥": 0,
+    "😡": 0,
+    "👍": 0
+};
 
-document.getElementById("likeCount").innerText = likes;
+let myReaction = localStorage.getItem("myReaction");
 
-if (alreadyLiked) {
-    document.getElementById("likeBtn").disabled = true;
+function updateReactions() {
+    document.getElementById("likeCount").innerText = reactions["❤️"];
+    document.getElementById("fireCount").innerText = reactions["🔥"];
+    document.getElementById("angryCount").innerText = reactions["😡"];
+    document.getElementById("thumbCount").innerText = reactions["👍"];
+
+    document.querySelectorAll(".reaction-box button").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    if (myReaction) {
+        const ids = {
+            "❤️": "like",
+            "🔥": "fire",
+            "😡": "angry",
+            "👍": "thumb"
+        };
+        document.getElementById(ids[myReaction])?.classList.add("active");
+    }
 }
 
-function likeVideo() {
-    if (localStorage.getItem("alreadyLiked")) return;
+function react(emoji) {
+    if (myReaction === emoji) return;
 
-    likes++;
+    if (myReaction) reactions[myReaction]--;
 
-    localStorage.setItem("videoLikes", likes);
-    localStorage.setItem("alreadyLiked", "true");
+    reactions[emoji]++;
+    myReaction = emoji;
 
-    document.getElementById("likeCount").innerText = likes;
-    document.getElementById("likeBtn").disabled = true;
+    localStorage.setItem("reactions", JSON.stringify(reactions));
+    localStorage.setItem("myReaction", myReaction);
+
+    updateReactions();
 }
+
+updateReactions();
 </script>
 
-<!-- ❤️ LIKE REACTION END -->
+<!-- ❤️🔥😡👍 REACTION SECTION END -->
 
 <!-- Episode End 62👇63☝️ -->
 
