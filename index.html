@@ -77,6 +77,70 @@ controls>
 </body>
 </html>
 
+<div class="credit">
+    💻 Credit By :- <span>Developer Mujju</span> 👨‍💻
+    <br><br>
+    ⚡ Powered By FILME DUNIYA
+</div>
+
+<!-- Episode End 62👇63☝️ -->
+
+<!-- ❤️ LIKE REACTION START -->
+
+<div class="like-reaction">
+    <button id="likeBtn" onclick="likeVideo()">
+        ❤️ Like <span id="likeCount">0</span>
+    </button>
+</div>
+
+<style>
+.like-reaction {
+    text-align: center;
+    margin: 20px;
+}
+
+.like-reaction button {
+    background: #222;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.like-reaction button:disabled {
+    background: #444;
+    color: #aaa;
+    cursor: not-allowed;
+}
+</style>
+
+<script>
+let likes = Number(localStorage.getItem("videoLikes")) || 0;
+let alreadyLiked = localStorage.getItem("alreadyLiked");
+
+document.getElementById("likeCount").innerText = likes;
+
+if (alreadyLiked) {
+    document.getElementById("likeBtn").disabled = true;
+}
+
+function likeVideo() {
+    if (localStorage.getItem("alreadyLiked")) return;
+
+    likes++;
+
+    localStorage.setItem("videoLikes", likes);
+    localStorage.setItem("alreadyLiked", "true");
+
+    document.getElementById("likeCount").innerText = likes;
+    document.getElementById("likeBtn").disabled = true;
+}
+</script>
+
+<!-- ❤️ LIKE REACTION END -->
+
 <!-- Episode End 62👇63☝️ -->
 
 <!DOCTYPE html>
