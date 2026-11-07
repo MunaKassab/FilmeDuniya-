@@ -164,3 +164,177 @@ video {
 
 </body>
 </html>
+
+<-- New Episode Add Recently -->
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filme Duniya</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 15px;
+    background: #111;
+    font-family: Arial, sans-serif;
+}
+
+.video {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.video video, .video iframe {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border:0;
+}
+
+.video iframe {
+    aspect-ratio:16/9;
+}
+
+/* VIDEO TITLE */
+
+.video-title {
+    margin-top: 15px;
+    padding: 16px;
+    background: #202020;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.6;
+    overflow-wrap:anywhere;
+}
+
+/* TELEGRAM ANIMATION */
+
+.telegram-box {
+    margin-top: 20px;
+    padding: 18px 12px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #172b3d, #123e59);
+    text-align: center;
+    animation: glow 2s infinite alternate;
+}
+
+.telegram-icon {
+    font-size: 38px;
+    animation: bounce 1.5s infinite;
+}
+
+.telegram-title {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.telegram-text {
+    color: #cceaff;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.join-btn {
+    display: inline-block;
+    padding: 13px 30px;
+    background: #229ED9;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+/* DEVELOPER CREDIT */
+
+.credit {
+    margin-top: 30px;
+    padding: 15px;
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    border-top: 1px solid #333;
+}
+
+.credit span {
+    color: #00d9ff;
+    font-weight: bold;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 #229ed980; }
+    70% { box-shadow: 0 0 0 12px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 5px #229ED9; }
+    to { box-shadow: 0 0 18px #229ED9; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="video">
+<div class="main" id="main">
+
+    <video
+        id="player"
+        class="player"
+        src="https://bot2-x0ya.onrender.com/dl/6aef6e9256dad114c7bb3d0d"
+        type="video/mp4"
+        playsinline
+        controls
+        width="100%">
+    </video>
+
+</div>
+</div>
+
+<div class="video-title">
+    🎬 VIDEO TITLE:<br><br>
+    Bigg Boss S20 E63 BBHin Day 62 The Diwali Bash Begins! 720p JH WEB.mp4
+</div>
+
+<div class="telegram-box">
+
+    <div class="telegram-icon">✈️</div>
+
+    <div class="telegram-title">
+        FILME DUNIYA
+    </div>
+
+    <div class="telegram-text">
+        Join Our Telegram Channel For More Updates!
+    </div>
+
+    <a class="join-btn"
+       href="https://t.me/Filmeduniya_Bot"
+       target="_blank">
+       🚀 JOIN CHANNEL
+    </a>
+
+</div>
+
+<div class="credit">
+    💻 Credit By :- <span>Developer Mujju</span> 👨‍💻
+    <br><br>
+    ⚡ Powered By FILME DUNIYA
+</div>
+
+</body>
+</html>
