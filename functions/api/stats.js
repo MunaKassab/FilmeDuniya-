@@ -23,7 +23,7 @@ export async function onRequestGet({ request, env }) {
 
         const visitors = await env.DB.prepare(`
             SELECT COUNT(*) AS total
-            FROM movie_visitors
+            FROM movie_visitors_by_movie
             WHERE movie_id = ?
         `).bind(movieId).first();
 
