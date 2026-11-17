@@ -3,11 +3,12 @@ export async function onRequestPost({ request, env }) {
         const data = await request.json();
 
         const visitorId = data.visitorId;
+        const movieId = data.movieId;
 
-        if (!visitorId) {
+        if (!visitorId || !movieId) {
             return Response.json({
                 success: false,
-                error: "Visitor ID required"
+                error: "Visitor ID and Movie ID required"
             }, { status: 400 });
         }
 
@@ -15,14 +16,15 @@ export async function onRequestPost({ request, env }) {
 
         await env.DB.prepare(`
             INSERT OR IGNORE INTO movie_visitors
-            (visitor_id, first_seen, last_seen)
+            (visitor_id, movie_id, first_seen)
             VALUES (?, ?, ?)
-        `).bind(visitorId, now, now).run();
+        `).bind(visitorId, movieId, now).run();
 
         const total = await env.DB.prepare(`
             SELECT COUNT(*) AS total
             FROM movie_visitors
-        `).first();
+            WHERE movie_id = ?
+        `).bind(movieId).first();
 
         return Response.json({
             success: true,
