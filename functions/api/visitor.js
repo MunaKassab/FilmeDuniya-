@@ -15,14 +15,14 @@ export async function onRequestPost({ request, env }) {
         const now = new Date().toISOString();
 
         await env.DB.prepare(`
-            INSERT OR IGNORE INTO movie_visitors
+            INSERT OR IGNORE INTO movie_visitors_by_movie
             (visitor_id, movie_id, first_seen)
             VALUES (?, ?, ?)
         `).bind(visitorId, movieId, now).run();
 
         const total = await env.DB.prepare(`
             SELECT COUNT(*) AS total
-            FROM movie_visitors
+            FROM movie_visitors_by_movie
             WHERE movie_id = ?
         `).bind(movieId).first();
 
@@ -37,4 +37,4 @@ export async function onRequestPost({ request, env }) {
             error: error.message
         }, { status: 500 });
     }
-}
+    }
