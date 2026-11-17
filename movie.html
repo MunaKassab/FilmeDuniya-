@@ -212,7 +212,32 @@ body {
         </div>
 
     </div>
+<!--Chages kar raa hu 🫡-->
+    <!-- MOVIE STATISTICS -->
 
+<div class="movie-info" id="movieStats">
+
+    <div class="details-heading">
+        📊 Movie Statistics
+    </div>
+
+    <div class="info-item">
+        <span class="info-label">👁️ Total Views</span>
+        <span class="info-value" id="totalViews">Loading...</span>
+    </div>
+
+    <div class="info-item">
+        <span class="info-label">▶️ Total Plays</span>
+        <span class="info-value" id="totalPlays">Loading...</span>
+    </div>
+
+    <div class="info-item">
+        <span class="info-label">👥 Unique Visitors</span>
+        <span class="info-value" id="totalVisitors">Loading...</span>
+    </div>
+
+</div>
+    <!--Chages kar raa hu 🫡-->
 
     <!-- TELEGRAM CHANNEL -->
     <a href="https://t.me/Filmeduniya_Bot"
@@ -267,21 +292,99 @@ body {
 
 </div>
 
-
-<!-- VIDEO SOURCE -->
 <script>
 
 const video = document.getElementById("myVideo");
 
-video.src = "https://fsb58-dd047854e00a.herokuapp.com/81192?hash=AgAD-y";
+const API = "/api";
 
+// VIDEO SOURCE
+video.src = "https://fsb58-dd047854e00a.herokuapp.com/81192?hash=AgAD-y";
 video.load();
 
 video.addEventListener("error", function() {
     console.log("Video playback error:", video.error);
 });
 
-</script>
 
-</body>
-    </html>
+// UNIQUE VISITOR ID
+let visitorId = localStorage.getItem("filmVisitorId");
+
+if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    localStorage.setItem("filmVisitorId", visitorId);
+}
+
+
+// LOAD STATISTICS
+async function loadStats() {
+    try {
+        const response = await fetch(API + "/stats");
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById("totalViews").textContent = data.views;
+            document.getElementById("totalPlays").textContent = data.plays;
+            document.getElementById("totalVisitors").textContent = data.visitors;
+        }
+
+    } catch (error) {
+        console.log("Stats Error:", error);
+    }
+}
+
+
+// COUNT VIEW
+async function countView() {
+    await fetch(API + "/view", {
+        method: "POST"
+    });
+}
+
+
+// COUNT UNIQUE VISITOR
+async function countVisitor() {
+    await fetch(API + "/visitor", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            visitorId: visitorId
+        })
+    });
+}
+
+
+// COUNT VIDEO PLAY
+let playCounted = false;
+
+video.addEventListener("play", async function() {
+
+    if (!playCounted) {
+        playCounted = true;
+
+        await fetch(API + "/play", {
+            method: "POST"
+        });
+
+        loadStats();
+    }
+
+});
+
+
+// START COUNTERS
+async function startCounters() {
+
+    await Promise.all([
+        countView(),
+        countVisitor()
+    ]);
+
+    await loadStats();
+}
+
+startCounters();
+
+</script>
