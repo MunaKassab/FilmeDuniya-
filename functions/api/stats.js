@@ -1,21 +1,37 @@
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ request, env }) {
     try {
+        const url = new URL(request.url);
+        const movieId = url.searchParams.get("movieId");
+
+        if (!movieId) {
+            return Response.json({
+                success: false,
+                error: "Movie ID required"
+            }, { status: 400 });
+        }
+
+        await env.DB.prepare(`
+            INSERT OR IGNORE INTO movie_stats (id, views, plays)
+            VALUES (?, 0, 0)
+        `).bind(movieId).run();
+
         const result = await env.DB.prepare(`
             SELECT views, plays
             FROM movie_stats
             WHERE id = ?
-        `).bind("premada-oorali-2026").first();
+        `).bind(movieId).first();
 
         const visitors = await env.DB.prepare(`
             SELECT COUNT(*) AS total
             FROM movie_visitors
-        `).first();
+            WHERE movie_id = ?
+        `).bind(movieId).first();
 
         return Response.json({
             success: true,
-            views: result?.views || 0,
-            plays: result?.plays || 0,
-            visitors: visitors?.total || 0
+            views: result.views,
+            plays: result.plays,
+            visitors: visitors.total
         });
 
     } catch (error) {
