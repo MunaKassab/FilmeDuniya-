@@ -146,6 +146,21 @@ body {
     60%, 100% { left: 150%; }
 }
 
+/* DISCLAIMER */
+.disclaimer-box {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+    padding: 12px 15px;
+    background: #141720;
+    border: 1px solid #292e3a;
+    border-radius: 10px;
+    color: #b8bdc9;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+}
+
 /* DEVELOPER CREDIT */
 .developer-credit {
     text-align: center;
@@ -212,32 +227,32 @@ body {
         </div>
 
     </div>
-<!--Chages kar raa hu 🫡-->
+
+
     <!-- MOVIE STATISTICS -->
+    <div class="movie-info" id="movieStats">
 
-<div class="movie-info" id="movieStats">
+        <div class="details-heading">
+            📊 Movie Statistics
+        </div>
 
-    <div class="details-heading">
-        📊 Movie Statistics
+        <div class="info-item">
+            <span class="info-label">👁️ Total Views</span>
+            <span class="info-value" id="totalViews">Loading...</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">▶️ Total Plays</span>
+            <span class="info-value" id="totalPlays">Loading...</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">👥 Unique Visitors</span>
+            <span class="info-value" id="totalVisitors">Loading...</span>
+        </div>
+
     </div>
 
-    <div class="info-item">
-        <span class="info-label">👁️ Total Views</span>
-        <span class="info-value" id="totalViews">Loading...</span>
-    </div>
-
-    <div class="info-item">
-        <span class="info-label">▶️ Total Plays</span>
-        <span class="info-value" id="totalPlays">Loading...</span>
-    </div>
-
-    <div class="info-item">
-        <span class="info-label">👥 Unique Visitors</span>
-        <span class="info-value" id="totalVisitors">Loading...</span>
-    </div>
-
-</div>
-    <!--Chages kar raa hu 🫡-->
 
     <!-- TELEGRAM CHANNEL -->
     <a href="https://t.me/Filmeduniya_Bot"
@@ -260,131 +275,169 @@ body {
 
     </a>
 
-    <style>
-.disclaimer-box {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 20px;
-    padding: 12px 15px;
-    background: #141720;
-    border: 1px solid #292e3a;
-    border-radius: 10px;
-    color: #b8bdc9;
-    font-size: 12px;
-    line-height: 1.6;
-    text-align: center;
-}
-</style>
 
-<div class="disclaimer-box">
-    ⚠️ Disclaimer: All content belongs to its respective copyright owners.
-    We do not claim ownership or intend to violate copyright.
-    For copyright concerns or removal requests, please contact on Telegram.
-</div>
+    <!-- DISCLAIMER -->
+    <div class="disclaimer-box">
+        ⚠️ Disclaimer: All content belongs to its respective copyright owners.
+        We do not claim ownership or intend to violate copyright.
+        For copyright concerns or removal requests, please contact on Telegram.
+    </div>
 
 
     <!-- DEVELOPER CREDIT -->
     <div class="developer-credit">
 
-        ❤️ All Credit Developer :- <span> Mujju </span> 👨‍💻
+        ❤️ All Credit Developer :- <span>Mujju</span> 👨‍💻
 
     </div>
 
 </div>
 
+
+<!-- MOVIE STATISTICS SCRIPT -->
 <script>
 
 const video = document.getElementById("myVideo");
 
 const API = "/api";
 
-// VIDEO SOURCE
-video.src = "https://fsb58-dd047854e00a.herokuapp.com/81192?hash=AgAD-y";
-video.load();
 
-video.addEventListener("error", function() {
-    console.log("Video playback error:", video.error);
-});
+// GET CURRENT FILE NAME
+const fileName = location.pathname.split("/").pop();
+
+const movieName = fileName.replace(/\.html$/i, "");
 
 
-// UNIQUE VISITOR ID
-let visitorId = localStorage.getItem("filmVisitorId");
+// ONLY movie.html, movie1.html, movie2.html etc.
+if (/^movie\d*$/i.test(movieName)) {
 
-if (!visitorId) {
-    visitorId = crypto.randomUUID();
-    localStorage.setItem("filmVisitorId", visitorId);
-}
+    // UNIQUE MOVIE ID
+    const movieId = movieName.toLowerCase();
 
 
-// LOAD STATISTICS
-async function loadStats() {
-    try {
-        const response = await fetch(API + "/stats");
-        const data = await response.json();
+    // VIDEO SOURCE
+    video.src = "https://fsb58-dd047854e00a.herokuapp.com/81192?hash=AgAD-y";
+    video.load();
 
-        if (data.success) {
-            document.getElementById("totalViews").textContent = data.views;
-            document.getElementById("totalPlays").textContent = data.plays;
-            document.getElementById("totalVisitors").textContent = data.visitors;
+
+    video.addEventListener("error", function() {
+        console.log("Video playback error:", video.error);
+    });
+
+
+    // UNIQUE VISITOR ID
+    let visitorId = localStorage.getItem("filmVisitorId");
+
+    if (!visitorId) {
+        visitorId = crypto.randomUUID();
+        localStorage.setItem("filmVisitorId", visitorId);
+    }
+
+
+    // LOAD STATISTICS
+    async function loadStats() {
+
+        try {
+
+            const response = await fetch(
+                API + "/stats?movieId=" + encodeURIComponent(movieId)
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+
+                document.getElementById("totalViews").textContent = data.views;
+
+                document.getElementById("totalPlays").textContent = data.plays;
+
+                document.getElementById("totalVisitors").textContent = data.visitors;
+
+            }
+
+        } catch (error) {
+
+            console.log("Stats Error:", error);
+
         }
 
-    } catch (error) {
-        console.log("Stats Error:", error);
     }
-}
 
 
-// COUNT VIEW
-async function countView() {
-    await fetch(API + "/view", {
-        method: "POST"
-    });
-}
+    // COUNT VIEW
+    async function countView() {
+
+        await fetch(
+            API + "/view?movieId=" + encodeURIComponent(movieId),
+            {
+                method: "POST"
+            }
+        );
+
+    }
 
 
-// COUNT UNIQUE VISITOR
-async function countVisitor() {
-    await fetch(API + "/visitor", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            visitorId: visitorId
-        })
-    });
-}
+    // COUNT UNIQUE VISITOR
+    async function countVisitor() {
 
+        await fetch(API + "/visitor", {
 
-// COUNT VIDEO PLAY
-let playCounted = false;
+            method: "POST",
 
-video.addEventListener("play", async function() {
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    if (!playCounted) {
-        playCounted = true;
+            body: JSON.stringify({
+                visitorId: visitorId,
+                movieId: movieId
+            })
 
-        await fetch(API + "/play", {
-            method: "POST"
         });
 
-        loadStats();
     }
 
-});
+
+    // COUNT VIDEO PLAY
+    let playCounted = false;
+
+    video.addEventListener("play", async function() {
+
+        if (!playCounted) {
+
+            playCounted = true;
+
+            await fetch(
+                API + "/play?movieId=" + encodeURIComponent(movieId),
+                {
+                    method: "POST"
+                }
+            );
+
+            loadStats();
+
+        }
+
+    });
 
 
-// START COUNTERS
-async function startCounters() {
+    // START COUNTERS
+    async function startCounters() {
 
-    await Promise.all([
-        countView(),
-        countVisitor()
-    ]);
+        await Promise.all([
+            countView(),
+            countVisitor()
+        ]);
 
-    await loadStats();
+        await loadStats();
+
+    }
+
+    startCounters();
+
 }
 
-startCounters();
-
 </script>
+
+</body>
+</html>
